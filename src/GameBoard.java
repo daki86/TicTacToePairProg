@@ -1,14 +1,14 @@
+import java.util.Observable;
 
-public class GameBoard {
+public class GameBoard extends Observable{
 	
 	//Marker marker;
 	
+	private static GameBoard game = new GameBoard();
 	private String board[][];
 	private int size = 3;
 	
-	public GameBoard(){
-		//this.marker = marker;
-		
+	private GameBoard(){		
 		board = new String[size][size];
 		
 		for(int i = 0; i < 3; i++){
@@ -18,15 +18,20 @@ public class GameBoard {
 		}
 	}	
 	
-	public void placeMarker(Marker marker, int markerPos){
-		// implement exception
+	public static GameBoard getGame(){
+		return game;
+	}
+	
+	public void placeMarker(Marker marker, int markerPos)throws Exception{
 		int counter = 0;
 		
 		for(int i = 0; i < 3; i++){
 			for(int j = 0; j < 3; j++){
-				if(markerPos == counter){
+				if(markerPos == counter && board[i][j] == null){
 					board[i][j] = marker.name();
-				}				
+				}else if(markerPos == counter && board[i][j] != null){
+					throw new Exception();
+				}
 				counter++;
 			}
 		}
@@ -86,6 +91,27 @@ public class GameBoard {
 			}		
 		}
 		return win;
+	}
+	
+	public boolean checkTie(){
+		boolean tie = false;
+		
+		for(int i = 0; i < 3; i++){
+			for(int j = 0; j < 3; j++){
+				if(board[i][j] == null){
+				tie = false;
+				
+				break;
+				
+				}	
+				else{
+					tie = true;
+					
+				}
+			}
+		}
+		
+		return tie;
 	}
 	
 	public void resetBoard(){

@@ -7,7 +7,8 @@ public class Main {
 		
 		
 		
-		GameBoard game = new GameBoard();
+		GameBoard game = GameBoard.getGame();
+		
 		ArrayList<Player> player = new ArrayList<>();
 		
 		Scanner input = new Scanner(System.in);
@@ -15,6 +16,8 @@ public class Main {
 		
 		int currentPlayer = 0;
 		int markerPos = 0;
+		
+		Boolean nextPlayer = true;
 		
 		Marker currentMarker = Marker.X;
 		
@@ -49,11 +52,37 @@ public class Main {
 						currentMarker = Marker.O;
 						currentPlayer++;
 					}
-					System.out.print("Player: " + p.getName() + "\nPlace marker "+currentMarker+": ");
-					markerPos = placer.nextInt() - 1;
-					game.placeMarker(currentMarker, markerPos);
+					do{	
+					System.out.print("Player: " + p.getName() + "\nPlace marker "+currentMarker+": ");	
+						do{	
+							markerPos = 0;
+							try {
+								markerPos = Integer.parseInt(placer.nextLine());
+							} catch (Exception e){
+								System.out.println("\nOnly numbers allowed");
+								
+							}
+							
+							if(markerPos < 1 || markerPos > 9) {
+								System.out.println("\npick a number between 1-9");	
+								System.out.print("\nPlayer: " + p.getName() + "\nPlace marker "+currentMarker+": ");
+							}
+						}while(markerPos < 1 || markerPos > 9);
+						
+						nextPlayer = true;
+						
+						try {
+							game.placeMarker(currentMarker, markerPos-1);
+						} catch (Exception e) {
+							System.out.println("\nSpace is occupied");
+							nextPlayer = false;
+							//currentPlayer--;
+						}
+						game.printBoard();
+					}while(!nextPlayer);
 					
-					game.printBoard();
+					nextPlayer = true;
+		
 					gameOver = game.checkWinCondition(currentMarker);
 					
 					if(gameOver == true){
@@ -62,6 +91,14 @@ public class Main {
 						game.resetBoard();
 						currentPlayer = 0;
 						break;
+					}
+					else if(game.checkTie()){
+						System.out.println("It's a tie!");
+						
+						game.resetBoard();
+						currentPlayer = 0;
+						gameOver = true;
+						break;	
 					}
 				}
 			}while(gameOver != true);

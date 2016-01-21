@@ -30,7 +30,7 @@ public class Player {
 	}
 	
 	public String toString(){
-		String presentation = "Player: "+this.name+"\n Wins: "+this.wins; 
+		String presentation = this.name+"\n   Wins: "+this.wins; 
 		
 		return presentation;
 	}
